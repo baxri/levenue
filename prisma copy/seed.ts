@@ -1,11 +1,8 @@
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
-async function main() {
-  const spotify = await prisma.user.upsert({
-    where: { email: "spotify@levenue.io" },
-    update: {},
-    create: {
+export async function seed() {
+  const spotify = await prisma.user.create({
       email: "spotify@levenue.io",
       name: "Spotify",
       subscriptions: {
@@ -48,16 +45,6 @@ async function main() {
           },
         ],
       },
-    },
   });
   console.log({ spotify });
 }
-
-main()
-  .catch(e => {
-    console.error(e)
-    process.exit(1)
-  })
-  .finally(async () => {
-    await prisma.$disconnect()
-  })

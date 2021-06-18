@@ -16,6 +16,8 @@ export default async function handle(
       where: { published: true },
     });
 
+    console.log('subscriptions', subscriptions);
+
     // I can assume that all subscriptions are same price
     const subscriptionAmount = SPOTIFY_PREMIUM_PACKAGE;
 
