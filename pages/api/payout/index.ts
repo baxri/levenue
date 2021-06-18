@@ -1,7 +1,6 @@
 import { Subscription } from ".prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 
-
 import prisma from "../../../lib/prisma";
 
 const SPOTIFY_PREMIUM_PACKAGE = 35;
@@ -33,7 +32,9 @@ export default async function handle(
 
     if (actuallAmount > maxPayoutAmount) {
       throw new Error(
-        `Your actuall maximum payout amount is ${(maxPayoutAmount * BID_PRICE).toFixed(2)}`
+        `Your actuall maximum payout amount is ${(
+          maxPayoutAmount * BID_PRICE
+        ).toFixed(2)}`
       );
     }
 
@@ -49,7 +50,7 @@ export default async function handle(
     }
 
     if (confirm) {
-     await prisma.payout.create({
+      await prisma.payout.create({
         data: {
           amount: calculatedAmount,
           actualAmount: calculatedActuallAmount,
