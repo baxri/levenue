@@ -1,4 +1,7 @@
+import { Subscription } from ".prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
+
+
 import prisma from "../../../lib/prisma";
 
 const SPOTIFY_PREMIUM_PACKAGE = 35;
@@ -12,11 +15,9 @@ export default async function handle(
   try {
     const { amount, confirm } = req.body;
 
-    const subscriptions = await prisma.subscription.findMany({
+    const subscriptions: Subscription[] = await prisma.subscription.findMany({
       where: { published: true },
     });
-
-    console.log('subscriptions', subscriptions);
 
     // I can assume that all subscriptions are same price
     const subscriptionAmount = SPOTIFY_PREMIUM_PACKAGE;

@@ -1,29 +1,37 @@
-import React from 'react'
-import { GetServerSideProps } from 'next'
-import Layout from '../components/Layout'
+import React from "react";
+import { GetServerSideProps } from "next";
+import Layout from "../components/Layout";
 
 type Payout = {
-  id: number
-  amount: number
-  actualAmount: number
-  bidPrice: number
-}
+  id: number;
+  amount: number;
+  actualAmount: number;
+  bidPrice: number;
+};
 
 type Props = {
-  payouts: Payout[]
-}
+  payouts: Payout[];
+  mrr: number;
+};
 
-const Blog: React.FC<Props> = props => {
+const Blog: React.FC<Props> = (props) => {
   return (
     <Layout>
       <div className="page">
         <h1>My Payouts</h1>
+        <p className="mrr">Your current MRR is: ${props.mrr.toFixed(2)}</p>
         <main>
-          {props.payouts.length > 0 ? props.payouts.map(({id, amount, actualAmount, bidPrice}: Payout) => (
-            <div key={id} className="payout">
-              {`ID: ${id} Amount: $${amount} ActualAmount: $${actualAmount} Bid Price: $${bidPrice}`} 
-            </div>
-          )) : <p>You do not have payouts yet!</p> }
+          {props.payouts.length > 0 ? (
+            props.payouts.map(
+              ({ id, amount, actualAmount, bidPrice }: Payout) => (
+                <div key={id} className="payout">
+                  {`ID: ${id} Amount: $${amount} ActualAmount: $${actualAmount} Bid Price: $${bidPrice}`}
+                </div>
+              )
+            )
+          ) : (
+            <p>You do not have payouts yet!</p>
+          )}
         </main>
       </div>
       <style jsx>{`
@@ -32,18 +40,25 @@ const Blog: React.FC<Props> = props => {
           padding: 2em;
           margin-bottom: 1em;
         }
+
+        .mrr{
+          color: lightgreen;
+        }
       `}</style>
     </Layout>
-  )
-}
+  );
+};
 
 export const getServerSideProps: GetServerSideProps = async () => {
   // TODO API URL SHOULD BE IN ENV
-  const res = await fetch('http://localhost:3000/api/feed')
-  const payouts = await res.json()
-  return {
-    props: { payouts },
-  }
-}
+  const mrrRes = await fetch("http://localhost:3000/api/mrr");
+  const mrrResponseJson = await mrrRes.json();
 
-export default Blog
+  const payoutRes = await fetch("http://localhost:3000/api/feed");
+  const payoutResponseJson = await payoutRes.json();
+  return {
+    props: { payouts: payoutResponseJson, mrr: mrrResponseJson.mrr },
+  };
+};
+
+export default Blog;
