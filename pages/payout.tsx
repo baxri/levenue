@@ -1,22 +1,39 @@
 import React, { useState } from 'react'
-import Layout from '../components/Layout'
 import Router from 'next/router'
 
+import Layout from '../components/Layout'
+
 const Draft: React.FC = () => {
-  const [title, setTitle] = useState('')
-  const [content, setContent] = useState('')
-  const [authorEmail, setAuthorEmail] = useState('')
+  const [amount, setAmount] = useState('')
+  const [error, setError] = useState(null)
+  const [result, setResult] = useState(null)
 
   const submitData = async (e: React.SyntheticEvent) => {
     e.preventDefault()
     try {
-      const body = { title, content, authorEmail }
-      await fetch(`http://localhost:3000/api/post`, {
+
+      setError(null);
+      setResult(null);
+
+      const body = { amount, confirm: !!result }
+
+      // TODO API URL SHOULD BE IN ENV
+      const res = await fetch(`http://localhost:3000/api/payout`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
       })
-      await Router.push('/drafts')
+      const jsonRespnse = await res.json()
+
+      if(jsonRespnse.success){
+        if(jsonRespnse.confirm){
+          await Router.push('/')
+        }else{
+          setResult(jsonRespnse.result);
+        }
+      }else{
+        setError(jsonRespnse.error);
+      }
     } catch (error) {
       console.error(error)
     }
@@ -27,31 +44,24 @@ const Draft: React.FC = () => {
       <div>
         <form
           onSubmit={submitData}>
-          <h1>Create Draft</h1>
+          <h1>Make Payout</h1>
           <input
             autoFocus
-            onChange={e => setTitle(e.target.value)}
-            placeholder="Title"
+            onChange={e => setAmount(e.target.value)}
+            placeholder="Type payout amount"
             type="text"
-            value={title}
+            value={amount}
           />
+          {!!error && <p>{error}</p>}
+          {!!result && <div>
+              <p>Amount: ${result.calculatedAmount}</p>
+              <p>Actuall Amount: ${result.calculatedActuallAmount}</p>
+              <p>Bid Price: ${result.bidPrice}</p>
+            </div>}
           <input
-            onChange={e => setAuthorEmail(e.target.value)}
-            placeholder="Author (email address)"
-            type="text"
-            value={authorEmail}
-          />
-          <textarea
-            cols={50}
-            onChange={e => setContent(e.target.value)}
-            placeholder="Content"
-            rows={8}
-            value={content}
-          />
-          <input
-            disabled={!content || !title || !authorEmail}
+            disabled={!amount}
             type="submit"
-            value="Create"
+            value={!result ? 'Calculate' : 'Confirm'}
           />
           <a className="back" href="#" onClick={() => Router.push('/')}>
             or Cancel

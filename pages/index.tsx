@@ -1,37 +1,36 @@
 import React from 'react'
 import { GetServerSideProps } from 'next'
 import Layout from '../components/Layout'
-import Post, { PostProps } from '../components/Post'
+
+type Payout = {
+  id: number
+  amount: number
+  actualAmount: number
+  bidPrice: number
+}
 
 type Props = {
-  feed: PostProps[]
+  payouts: Payout[]
 }
 
 const Blog: React.FC<Props> = props => {
   return (
     <Layout>
       <div className="page">
-        <h1>My Blog</h1>
+        <h1>My Payouts</h1>
         <main>
-          {props.feed.map(post => (
-            <div key={post.id} className="post">
-              <Post post={post} />
+          {props.payouts.length > 0 ? props.payouts.map(({id, amount, actualAmount, bidPrice}: Payout) => (
+            <div key={id} className="payout">
+              {`ID: ${id} Amount: $${amount} ActualAmount: $${actualAmount} Bid Price: $${bidPrice}`} 
             </div>
-          ))}
+          )) : <p>You do not have payouts yet!</p> }
         </main>
       </div>
       <style jsx>{`
-        .post {
+        .payout {
           background: white;
-          transition: box-shadow 0.1s ease-in;
-        }
-
-        .post:hover {
-          box-shadow: 1px 1px 3px #aaa;
-        }
-
-        .post + .post {
-          margin-top: 2rem;
+          padding: 2em;
+          margin-bottom: 1em;
         }
       `}</style>
     </Layout>
@@ -39,10 +38,11 @@ const Blog: React.FC<Props> = props => {
 }
 
 export const getServerSideProps: GetServerSideProps = async () => {
+  // TODO API URL SHOULD BE IN ENV
   const res = await fetch('http://localhost:3000/api/feed')
-  const feed = await res.json()
+  const payouts = await res.json()
   return {
-    props: { feed },
+    props: { payouts },
   }
 }
 

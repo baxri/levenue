@@ -1,10 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import prisma from '../../lib/prisma'
 
-
+// GET /api/payout
 export default async function handle(req: NextApiRequest, res: NextApiResponse) {
-  const posts = await prisma.subscription.findMany({
-    where: { published: true },
-  })
-  res.json(posts)
+  const payouts = await prisma.payout.findMany()
+  res.json(payouts)
 }

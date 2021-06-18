@@ -43,7 +43,7 @@ export async function seed() {
           {
             title: "Spotify Premium",
             published: true,
-            user: "William Abdul",
+            user: "David Japharidze",
             amount: 35,
           },
         ],

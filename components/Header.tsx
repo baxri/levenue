@@ -13,8 +13,8 @@ const Header: React.FC = () => {
        Hello Proxify
       </div>
       <div className="right">
-        <Link href="/create">
-          <a data-active={isActive('/create')}>+ Make Payout</a>
+        <Link href="/payout">
+          <a data-active={isActive('/payout')}>+ Make Payout</a>
         </Link>
       </div>
       <style jsx>{`
