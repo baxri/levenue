@@ -1,5 +1,7 @@
 import React from "react";
 import { GetServerSideProps } from "next";
+
+import {API_URL} from '../config';
 import Layout from "../components/Layout";
 
 type Payout = {
@@ -51,10 +53,10 @@ const Blog: React.FC<Props> = (props) => {
 
 export const getServerSideProps: GetServerSideProps = async () => {
   // TODO API URL SHOULD BE IN ENV
-  const mrrRes = await fetch("http://localhost:3000/api/mrr");
+  const mrrRes = await fetch(`${API_URL}/api/mrr`);
   const mrrResponseJson = await mrrRes.json();
 
-  const payoutRes = await fetch("http://localhost:3000/api/feed");
+  const payoutRes = await fetch(`${API_URL}/api/feed`);
   const payoutResponseJson = await payoutRes.json();
   return {
     props: { payouts: payoutResponseJson, mrr: mrrResponseJson.mrr },

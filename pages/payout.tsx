@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import Router from 'next/router'
 
+import {API_URL} from '../config';
 import Layout from '../components/Layout'
 
 const Draft: React.FC = () => {
@@ -18,7 +19,7 @@ const Draft: React.FC = () => {
       const body = { amount, confirm: !!result }
 
       // TODO API URL SHOULD BE IN ENV
-      const res = await fetch(`http://localhost:3000/api/payout`, {
+      const res = await fetch(`${API_URL}/api/payout`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
