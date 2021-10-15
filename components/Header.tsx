@@ -1,59 +1,48 @@
-import React from 'react'
-import Link from 'next/link'
-import { useRouter } from 'next/router'
+import React from "react";
+import Link from "next/link";
 
-const Header: React.FC = () => {
-  const router = useRouter()
-  const isActive: (pathname: string) => boolean =
-    pathname => router.pathname === pathname
-
-  return(
-    <nav>
-      <div className="left">
-       Hello Proxify
-      </div>
-      <div className="right">
-        <Link href="/payout">
-          <a data-active={isActive('/payout')}>+ Make Payout</a>
-        </Link>
-      </div>
+const AppIcon = () => (
+  <Link href="/">
+    <a className="app-icon" title="App Name">
+      <img src="/icon.png" />
       <style jsx>{`
-        nav {
-          display: flex;
-          padding: 2rem;
-          align-items: center;
+        a:hover {
+          filter: none;
         }
 
-        .bold {
-          font-weight: bold;
-        }
-
-        a {
-          text-decoration: none;
-          color: #000;
-          display: inline-block;
-        }
-
-        .left a[data-active='true'] {
-          color: gray;
-        }
-
-        a + a {
-          margin-left: 1rem;
-        }
-
-        .right {
-          margin-left: auto;
-        }
-
-        .right a {
-          border: 1px solid black;
-          padding: 0.5rem 1rem;
-          border-radius: 3px;
+        img {
+          position: absolute;
+          left: 10px;
+          top: 10px;
+          width: 30px;
+          height: 30px;
+          border-radius: 50%;
         }
       `}</style>
-    </nav>
-  )
-}
+    </a>
+  </Link>
+);
 
-export default Header
+export default ({ title = "App Name" }) => (
+  <header className="color-header-bg color-background-fg">
+    <AppIcon />
+    {title}
+    <style jsx>{`
+      header {
+        position: fixed;
+        z-index: 1000;
+        width: 100%;
+        left: 0;
+        top: 0;
+        height: 50px;
+        line-height: 50px;
+        font-weight: normal;
+        text-align: center;
+      }
+
+      :global(main) {
+        margin-top: 50px;
+      }
+    `}</style>
+  </header>
+);
